@@ -207,4 +207,38 @@ ERROR/SINGLE сонголтын дараах үндсэн frame: 15
 
 A3 хэсэгт нэмэх boundary болон давхар алдааны кейсүүдийг энэхүү 15 үндсэн frame-ээс тусад нь тооцно.
 
+## Даалгавар A3 — Спецификацийн хүснэгт: 
+
+Category-Partition аргаар тодорхойлсон ангилал, төлөөлөх утга болон хязгаарлалтуудад үндэслэн банкны шилжүүлгийн POST /transfer үйлдлийн 15 тестийн спецификаци боловсруулсан.
+
+Тестүүд нь дараах нөхцөлүүдийг хамарна:
+
+- Амжилттай шилжүүлэг
+- Шилжүүлэгч дансны алдаа
+- Хүлээн авагч дансны алдаа
+- Ижил данс хоорондын шилжүүлэг
+- Буруу дүн
+- Үлдэгдэл хүрэлцэхгүй байх
+- Өдрийн лимит хэтрэх
+- Валютын хөрвүүлэлт
+- Давхар алдаа
+- Хязгаарын утгын тест
+
+| ID | From | To | Amount | Currency | Нэмэлт нөхцөл | Хүлээгдэх үр дүн |
+|---|---|---|---|---|---|---|
+| A01 | Valid | Valid | Normal | Same | Ердийн шилжүүлэг | `201 OK` |
+| A02 | Valid | Valid | Normal | Different | Хөрвүүлсэн дүн 100 MNT | `201 OK` |
+| A03 | Missing | Valid | Normal | Same | From үүсгээгүй | `200 ERROR_NO_FROM` |
+| A04 | Frozen | Valid | Normal | Same | From царцаагдсан | `200 ERROR_FROZEN` |
+| A05 | Valid | Missing | Normal | Same | To үүсгээгүй | `200 ERROR_NO_TO` |
+| A06 | Valid | SameAsFrom | Normal | Same | Нэг данс | `200 ERROR_SAME_ACCOUNT` |
+| A07 | Valid | Valid | Zero | Same | `[SINGLE]` | `200 ERROR_BAD_AMOUNT` |
+| A08 | Valid | Valid | OverBalance | Same | 1,100 > үлдэгдэл 1,000 | `200 ERROR_INSUFFICIENT` |
+| A09 | Valid | Valid | OverLimit | Same | 900 > үлдсэн лимит 800 | `200 ERROR_LIMIT` |
+| A10 | Frozen | Missing | Normal | Same | Давхар алдаа | `200 ERROR_FROZEN` |
+| A11 | Valid | Valid | OverBalance | Different | 11 USD → 1,100 MNT | `200 ERROR_INSUFFICIENT` |
+| A12 | Valid | Valid | OverLimit | Different | 9 USD → 900 MNT | `200 ERROR_LIMIT` |
+| A13 | Valid | Valid | Normal | Same | Дүн = үлдэгдэл = 1,000; лимит 2,000 | `201 OK` |
+| A14 | Valid | Valid | Normal | Same | Дүн = үлдсэн лимит = 800; үлдэгдэл 2,000 | `201 OK` |
+| A15 | Valid | Valid | Сөрөг дүн | Same | `amount = -1`, нэмэлт boundary | `200 ERROR_BAD_AMOUNT` |
 
